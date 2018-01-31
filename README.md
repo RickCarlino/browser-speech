@@ -35,3 +35,16 @@ talk("Hello, world!", "en")
   .then((event) => console.log("Text to speech is nice");)
   .catch((event) => console.error("Failed. :("););
 ```
+
+# Dev Environment
+
+Perfect is the enemy of done. In the case of `browser-speech`, I have not had time to write a test suite.
+
+If you want to make changes to the lib (PRs welcome!) and verify that everything still works, you can load the `integration_test.html` in your browser via [parcel](https://parceljs.org/getting_started.html).
+
+```
+npm install -g parcel-bundler
+parcel integration_test.html
+# You can now test the operability of the `talk()` function by opening
+# http://localhost:1234 - You should hear speech.
+```
