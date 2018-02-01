@@ -1,12 +1,12 @@
 {
   "name": "browser-speech",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "./build/index.js",
   "scripts": {
     "build": "./build.sh"
   },
-  "types": "./dist/index.d.ts",
+  "types": "./build/index.d.ts",
   "keywords": [
     "speech",
     "text to speech"

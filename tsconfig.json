@@ -6,7 +6,7 @@
     "noImplicitAny": true,
     "allowUnreachableCode": false,
     "strictNullChecks": true,
-    "outDir": "./dist",
+    "outDir": "./build",
     "lib": [
       "es2017",
       "dom"

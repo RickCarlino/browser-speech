@@ -36,6 +36,11 @@ talk("Hello, world!", "en")
   .catch((event) => console.error("Failed. :("););
 ```
 
+# TODO
+
+ * Test suite
+ * Demo website
+
 # Dev Environment
 
 Perfect is the enemy of done. In the case of `browser-speech`, I have not had time to write a test suite.
