@@ -91,4 +91,4 @@ function talk(text, lang) {
     });
 }
 exports.talk = talk;
-exports.VERSION = "1.0.1";
+exports.VERSION = "1.0.2";
