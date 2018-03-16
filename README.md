@@ -39,7 +39,8 @@ import { talk } from "browser-speech";
 
 // FIRST PARAMETER:  Text you wish to speak
 // SECOND PARAMETER: Language code. Default is "en" (English). Throws exception
-                     when an unsupported code is entered.
+//                   when an unsupported code is entered.
+
 talk("Hello, world!", "en")
   .then((event) => console.log("Text to speech is nice");)
   .catch((event) => console.error("Failed. :("););

@@ -39,10 +39,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 function poll(input) {
-    var predicate = input.predicate, interval = input.interval, timeout = input.timeout;
+    var pollingFunction = input.pollingFunction, interval = input.interval, timeout = input.timeout;
     return new Promise(function (resolve, reject) {
         function check() {
-            var result = predicate();
+            var result = pollingFunction();
             if (result) {
                 clearInterval(intervalId);
                 clearInterval(timeoutId);
@@ -59,20 +59,37 @@ function poll(input) {
 }
 exports.poll = poll;
 ;
-var voices = speechSynthesis.getVoices();
+/** Determines if browser can even use speech synthesis. */
+function hasSpeech() {
+    if (speechSynthesis
+        && speechSynthesis.getVoices
+        && speechSynthesis.speak
+        && SpeechSynthesisUtterance) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+;
+/** Dynamically (and asynchronously) populated list of voices.
+ * Unfortunately, it is populated via polling :-\.
+ * Pull requests welcome. */
+var voices = hasSpeech() ? speechSynthesis.getVoices() : [];
 speechSynthesis.onvoiceschanged = function () {
     voices = speechSynthesis.getVoices();
 };
 function checkVoiceList() { return (voices.length) ? voices : undefined; }
-var voicePromise = poll({ predicate: checkVoiceList, timeout: 5000, interval: 250 });
-function getVoice() {
-    return voicePromise;
-}
+var voicePromise = poll({ pollingFunction: checkVoiceList, timeout: 5000, interval: 250 });
+function getVoice() { return voicePromise; }
 exports.getVoice = getVoice;
 function talk(text, lang) {
     if (lang === void 0) { lang = "en"; }
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
+            if (!hasSpeech()) {
+                return [2 /*return*/, Promise.reject({ error: "Speech synthesis not supported." })];
+            }
             return [2 /*return*/, getVoice()
                     .then(function (list) {
                     var v = list.filter(function (x) { return x.lang.includes(lang); })[0];
@@ -91,4 +108,4 @@ function talk(text, lang) {
     });
 }
 exports.talk = talk;
-exports.VERSION = "1.0.2";
+exports.VERSION = "1.1.0";

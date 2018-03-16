@@ -3,17 +3,17 @@
 // This file is a typescript conversion of the code shown above.
 
 export interface PollingProps<T> {
-  /** Finishes polling if return value is truthy. */
-  predicate: () => T | undefined
+  /** Performs polling until return value is truthy. */
+  pollingFunction: () => T | undefined
   timeout: number;
   interval: number;
 }
 
 export function poll<T>(input: PollingProps<T>): Promise<T> {
-  const { predicate, interval, timeout } = input;
+  const { pollingFunction, interval, timeout } = input;
   return new Promise(function (resolve, reject) {
     function check() {
-      var result = predicate();
+      var result = pollingFunction();
       if (result) {
         clearInterval(intervalId);
         clearInterval(timeoutId);
@@ -30,7 +30,23 @@ export function poll<T>(input: PollingProps<T>): Promise<T> {
   });
 };
 
-let voices: SpeechSynthesisVoice[] = speechSynthesis.getVoices();
+/** Determines if browser can even use speech synthesis. */
+function hasSpeech(): boolean {
+  if (speechSynthesis
+    && speechSynthesis.getVoices
+    && speechSynthesis.speak
+    && SpeechSynthesisUtterance) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+/** Dynamically (and asynchronously) populated list of voices.
+ * Unfortunately, it is populated via polling :-\.
+ * Pull requests welcome. */
+let voices: SpeechSynthesisVoice[] =
+  hasSpeech() ? speechSynthesis.getVoices() : [];
 
 speechSynthesis.onvoiceschanged = function () {
   voices = speechSynthesis.getVoices();
@@ -39,12 +55,15 @@ speechSynthesis.onvoiceschanged = function () {
 function checkVoiceList() { return (voices.length) ? voices : undefined; }
 
 const voicePromise =
-  poll({ predicate: checkVoiceList, timeout: 5000, interval: 250 });
-export function getVoice() {
-  return voicePromise;
-}
+  poll({ pollingFunction: checkVoiceList, timeout: 5000, interval: 250 });
+
+export function getVoice() { return voicePromise; }
 
 export async function talk(text: string, lang = "en") {
+  if (!hasSpeech()) {
+    return Promise.reject({ error: "Speech synthesis not supported." });
+  }
+
   return getVoice()
     .then((list) => {
       const v = list.filter(x => x.lang.includes(lang))[0];
@@ -61,4 +80,4 @@ export async function talk(text: string, lang = "en") {
     })
 }
 
-export const VERSION = "1.0.2"
+export const VERSION = "1.1.0"
