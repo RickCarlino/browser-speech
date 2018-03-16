@@ -32,10 +32,9 @@ export function poll<T>(input: PollingProps<T>): Promise<T> {
 
 /** Determines if browser can even use speech synthesis. */
 function hasSpeech(): boolean {
-  if (speechSynthesis
-    && speechSynthesis.getVoices
-    && speechSynthesis.speak
-    && SpeechSynthesisUtterance) {
+  if (window.speechSynthesis
+    && window.speechSynthesis.getVoices
+    && window.speechSynthesis.speak) {
     return true;
   } else {
     return false;
@@ -46,10 +45,10 @@ function hasSpeech(): boolean {
  * Unfortunately, it is populated via polling :-\.
  * Pull requests welcome. */
 let voices: SpeechSynthesisVoice[] =
-  hasSpeech() ? speechSynthesis.getVoices() : [];
+  hasSpeech() ? window.speechSynthesis.getVoices() : [];
 
-speechSynthesis.onvoiceschanged = function () {
-  voices = speechSynthesis.getVoices();
+window.speechSynthesis.onvoiceschanged = function () {
+  voices = window.speechSynthesis.getVoices();
 };
 
 function checkVoiceList() { return (voices.length) ? voices : undefined; }
@@ -72,7 +71,7 @@ export async function talk(text: string, lang = "en") {
       }
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.voice = v;
-      speechSynthesis.speak(utterance);
+      window.speechSynthesis.speak(utterance);
       return new Promise(function (resolve, reject) {
         utterance.onend = (event) => resolve(event);
         utterance.onerror = (event) => reject(event);
@@ -80,4 +79,4 @@ export async function talk(text: string, lang = "en") {
     })
 }
 
-export const VERSION = "1.1.0"
+export const VERSION = "1.1.1"

@@ -7,4 +7,4 @@ export interface PollingProps<T> {
 export declare function poll<T>(input: PollingProps<T>): Promise<T>;
 export declare function getVoice(): Promise<SpeechSynthesisVoice[]>;
 export declare function talk(text: string, lang?: string): Promise<{}>;
-export declare const VERSION = "1.1.0";
+export declare const VERSION = "1.1.1";

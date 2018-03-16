@@ -61,10 +61,9 @@ exports.poll = poll;
 ;
 /** Determines if browser can even use speech synthesis. */
 function hasSpeech() {
-    if (speechSynthesis
-        && speechSynthesis.getVoices
-        && speechSynthesis.speak
-        && SpeechSynthesisUtterance) {
+    if (window.speechSynthesis
+        && window.speechSynthesis.getVoices
+        && window.speechSynthesis.speak) {
         return true;
     }
     else {
@@ -75,9 +74,9 @@ function hasSpeech() {
 /** Dynamically (and asynchronously) populated list of voices.
  * Unfortunately, it is populated via polling :-\.
  * Pull requests welcome. */
-var voices = hasSpeech() ? speechSynthesis.getVoices() : [];
-speechSynthesis.onvoiceschanged = function () {
-    voices = speechSynthesis.getVoices();
+var voices = hasSpeech() ? window.speechSynthesis.getVoices() : [];
+window.speechSynthesis.onvoiceschanged = function () {
+    voices = window.speechSynthesis.getVoices();
 };
 function checkVoiceList() { return (voices.length) ? voices : undefined; }
 var voicePromise = poll({ pollingFunction: checkVoiceList, timeout: 5000, interval: 250 });
@@ -98,7 +97,7 @@ function talk(text, lang) {
                     }
                     var utterance = new SpeechSynthesisUtterance(text);
                     utterance.voice = v;
-                    speechSynthesis.speak(utterance);
+                    window.speechSynthesis.speak(utterance);
                     return new Promise(function (resolve, reject) {
                         utterance.onend = function (event) { return resolve(event); };
                         utterance.onerror = function (event) { return reject(event); };
@@ -108,4 +107,4 @@ function talk(text, lang) {
     });
 }
 exports.talk = talk;
-exports.VERSION = "1.1.0";
+exports.VERSION = "1.1.1";
