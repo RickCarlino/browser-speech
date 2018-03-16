@@ -20,6 +20,4 @@ function bootstrap(button) {
     setText(button, LABEL_START);
 }
 var button = document.querySelector("#btn");
-(button)
-    ? bootstrap(button)
-    : alert("Page failed to load.");
+(button) ? bootstrap(button) : alert("Page failed to load.");

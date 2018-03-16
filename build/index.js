@@ -75,9 +75,10 @@ function hasSpeech() {
  * Unfortunately, it is populated via polling :-\.
  * Pull requests welcome. */
 var voices = hasSpeech() ? window.speechSynthesis.getVoices() : [];
-window.speechSynthesis.onvoiceschanged = function () {
-    voices = window.speechSynthesis.getVoices();
-};
+window.speechSynthesis &&
+    (window.speechSynthesis.onvoiceschanged = function () {
+        voices = window.speechSynthesis.getVoices();
+    });
 function checkVoiceList() { return (voices.length) ? voices : undefined; }
 var voicePromise = poll({ pollingFunction: checkVoiceList, timeout: 5000, interval: 250 });
 function getVoice() { return voicePromise; }

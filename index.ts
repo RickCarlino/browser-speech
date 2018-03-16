@@ -47,9 +47,10 @@ function hasSpeech(): boolean {
 let voices: SpeechSynthesisVoice[] =
   hasSpeech() ? window.speechSynthesis.getVoices() : [];
 
-window.speechSynthesis.onvoiceschanged = function () {
-  voices = window.speechSynthesis.getVoices();
-};
+window.speechSynthesis &&
+  (window.speechSynthesis.onvoiceschanged = function () {
+    voices = window.speechSynthesis.getVoices();
+  });
 
 function checkVoiceList() { return (voices.length) ? voices : undefined; }
 

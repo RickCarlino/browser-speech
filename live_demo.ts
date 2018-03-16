@@ -26,6 +26,4 @@ function bootstrap(button: Element) {
 
 const button = document.querySelector("#btn");
 
-(button)
-  ? bootstrap(button)
-  : alert("Page failed to load.");
+(button) ? bootstrap(button) : alert("Page failed to load.");

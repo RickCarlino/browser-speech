@@ -48,7 +48,7 @@ talk("Hello, world!", "en")
 
 # Running Live Demo
 
-Load `integration_test.html` in your browser via [parcel](https://parceljs.org/getting_started.html).
+Load `live_demo.html` in your browser via [parcel](https://parceljs.org/getting_started.html).
 
 ```
 npm install -g parcel-bundler
